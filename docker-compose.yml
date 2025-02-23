@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  etl:
+    build: .
+    depends_on:
+      - db
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: energydata
+    ports:
+      - "5432:5432"
