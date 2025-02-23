@@ -1,9 +1,13 @@
 FILTER_IDS:
-  - ["Stromerzeugung=Braunkohle", 1223]
-  - ["Stromerzeugung=Kernenergie", 4068]
+  - ["Stromerzeugung: Braunkohle", 1223]
+  - ["Stromerzeugung: Kernenergie", 1224]
+  - ["Stromerzeugung: Wind Offshore", 1225]
+  - ["Stromverbrauch: Gesamt (Netzlast)", 410]
 REGIONS:
   - "DE"
   - "AT"
+  - "LU"
+  - "Amprion"
 RESOLUTIONS:
   - "hour"
   - "day"

@@ -1,12 +1,29 @@
 import yaml
 import requests
 import psycopg2
+import time
 
 def load_config(config_file="config.yaml"):
     """Load configuration from a YAML file."""
     with open(config_file, "r") as file:
         config = yaml.safe_load(file)
     return config
+
+def wait_for_db(host, database, user, password, retries=10, delay=5):
+    """
+    Wait for the database to become available.
+    Retries the connection for a given number of times with a delay.
+    """
+    for attempt in range(1, retries + 1):
+        try:
+            conn = psycopg2.connect(host=host, database=database, user=user, password=password)
+            conn.close()
+            return True
+        except psycopg2.OperationalError as e:
+            print(f"Database not ready (attempt {attempt}/{retries}). Retrying in {delay} seconds...")
+            time.sleep(delay)
+    print("Failed to connect to the database after several attempts.")
+    return False
 
 def fetch_timestamps(filter_id, region, resolution):
     """Fetch available timestamps from the SMARD API using the numeric filter id."""
@@ -113,13 +130,16 @@ def main():
         print("Missing configuration values in config.yaml.")
         return
 
+    # Wait for the database to be ready before processing.
+    if not wait_for_db(host="db", database="energydata", user="user", password="password"):
+        return
+
     # Iterate over all combinations of FILTER_IDS (each now a tuple), REGIONS, and RESOLUTIONS.
     for filter_tuple in filter_ids:
         # Unpack the tuple: filter_label is a descriptive name; filter_id is the numeric id for API calls.
         filter_label, filter_id = filter_tuple
         for region in regions:
             for resolution in resolutions:
-                print(f"\nProcessing combination: Filter {filter_label} ({filter_id}), Region {region}, Resolution {resolution}")
                 timestamps = fetch_timestamps(filter_id, region, resolution)
                 if not timestamps:
                     print(f"No timestamps found for combination {filter_label} ({filter_id}), {region}, {resolution}.")
@@ -139,7 +159,6 @@ def main():
                 
                 # Process each selected timestamp.
                 for ts in timestamps_to_process:
-                    print(f"Processing timestamp: {ts}")
                     timeseries_data = fetch_timeseries(filter_id, region, resolution, ts)
                     if not timeseries_data:
                         print(f"No time series data for timestamp {ts} for combination {filter_label} ({filter_id}), {region}, {resolution}.")
