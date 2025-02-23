@@ -1,3 +1,6 @@
-FILTER_IDS: [1223]
-REGIONS: ["DE"]
-RESOLUTIONS: ["hour"]
+FILTER_IDS: [1223, 4068]
+REGIONS: ["DE", "AT"]
+RESOLUTIONS: ["hour", "day"]
+TIMESTAMP_MODE: "newest" # Change to "all" or "specific" as needed.
+# If using "specific", provide a specific timestamp:
+# SPECIFIC_TIMESTAMP: 1627855200000
