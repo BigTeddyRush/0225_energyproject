@@ -3,3 +3,5 @@ requests
 pyyaml
 streamlit
 pandas
+altair
+ollama

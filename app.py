@@ -48,8 +48,12 @@ def main():
         ]
         
         # Date range filter.
-        min_date = filtered_data['datetime'].min().date() if not filtered_data.empty else pd.to_datetime("today").date()
-        max_date = filtered_data['datetime'].max().date() if not filtered_data.empty else pd.to_datetime("today").date()
+        if not filtered_data.empty:
+            min_date = filtered_data['datetime'].min().date()
+            max_date = filtered_data['datetime'].max().date()
+        else:
+            min_date = pd.to_datetime("today").date()
+            max_date = pd.to_datetime("today").date()
         date_range = st.sidebar.date_input("Select date range", [min_date, max_date], min_value=min_date, max_value=max_date)
         if len(date_range) == 2:
             start_date, end_date = date_range
@@ -73,6 +77,34 @@ def main():
                 title=f"Energy Data: {selected_filter} | {selected_region} | {selected_resolution}"
             ).interactive()
             st.altair_chart(chart, use_container_width=True)
+
+        st.subheader("AI Data Description")
+        prompt = st.text_area("Enter a prompt for the AI to describe the data", value="Please describe the following energy data:")
+        if st.button("Get AI Description"):
+            try:
+                # Import the Ollama client
+                from ollama import Client
+
+                def get_ai_response(prompt):
+                    # Use host.docker.internal to reach your host's Ollama service
+                    client = Client(host="host.docker.internal")
+                    response = client.chat(model='llama3:8b', messages=[
+                        {'role': 'user', 'content': prompt}
+                    ])
+                    return response['message']['content']
+
+                # Optionally, append a summary of the filtered data to the prompt.
+                if not filtered_data.empty:
+                    data_summary = filtered_data.describe().to_string()
+                    full_prompt = f"{prompt}\n\nData Summary:\n{data_summary}"
+                else:
+                    full_prompt = prompt
+
+                ai_response = get_ai_response(full_prompt)
+                st.write("### AI Response")
+                st.write(ai_response)
+            except Exception as e:
+                st.error(f"Error fetching AI response: {e}")
 
     except Exception as e:
         st.error(f"Error loading data: {e}")
