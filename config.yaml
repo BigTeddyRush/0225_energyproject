@@ -2,15 +2,22 @@ FILTER_IDS:
   - ["Stromerzeugung: Braunkohle", 1223]
   - ["Stromerzeugung: Kernenergie", 1224]
   - ["Stromerzeugung: Wind Offshore", 1225]
+  - ["Stromerzeugung: Wasserkraft", 1226]
+  - ["Stromerzeugung: Sonstige Konventionelle", 1227]
+  - ["Stromerzeugung: Sonstige Erneuerbare", 1228]
+  - ["Stromerzeugung: Biomasse", 4066]
+  - ["Stromerzeugung: Wind Onshore", 4067]
+  - ["Stromerzeugung: Photovoltaik", 4068]
+  - ["Stromerzeugung: Steinkohle", 4069]
+  - ["Stromerzeugung: Pumpspeicher", 4070]
+  - ["Stromerzeugung: Erdgas", 4071]
   - ["Stromverbrauch: Gesamt (Netzlast)", 410]
+  - ["Stromverbrauch: Residuallast", 4359]
+  - ["Stromverbrauch: Pumpspeicher", 4387]
 REGIONS:
   - "DE"
-  - "AT"
-  - "LU"
-  - "Amprion"
 RESOLUTIONS:
-  - "hour"
-  - "day"
+  - "quarterhour"
 TIMESTAMP_MODE: "newest" # Change to "all" or "specific" as needed.
 # If using "specific", provide a specific timestamp:
 # SPECIFIC_TIMESTAMP: 1627855200000
