@@ -27,7 +27,7 @@ def wait_for_db(host, database, user, password, retries=10, delay=5):
 
 def fetch_timestamps(filter_id, region, resolution):
     """Fetch available timestamps from the SMARD API using the numeric filter id."""
-    timestamp_url = f"https://www.smard.de/app/chart_data/{filter_id}/{region}/index_{resolution}.json"
+    timestamp_url = f"https://smard.api.proxy.bund.dev/app/chart_data/{filter_id}/{region}/index_{resolution}.json"
     print(f"Requesting timestamps from: {timestamp_url}")
     try:
         response = requests.get(timestamp_url, timeout=60)
@@ -41,7 +41,7 @@ def fetch_timestamps(filter_id, region, resolution):
 def fetch_timeseries(filter_id, region, resolution, timestamp):
     """Fetch time series data from the SMARD API using a timestamp."""
     timeseries_url = (
-        f"https://www.smard.de/app/chart_data/{filter_id}/{region}/"
+        f"hhttps://smard.api.proxy.bund.dev/app/chart_data/{filter_id}/{region}/"
         f"{filter_id}_{region}_{resolution}_{timestamp}.json"
     )
     print(f"Requesting time series data from: {timeseries_url}")
